@@ -25,6 +25,7 @@ public class UserController {
     @PostMapping("/register") // Post is used to send data or make changes in database
     public User registerUser(@RequestBody User user){ // here @RequestBody is important as data comes in JSON format,
         // @RequestBody takes JSON data and automatically packs it into User object and sends it to lower layer
+        // @RequestBody uses getter and setter in User to fit JSON data into the object
         return userService.registerUser(user);
     }
 
