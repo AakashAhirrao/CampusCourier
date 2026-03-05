@@ -28,7 +28,7 @@ public class UserService {
         // the logic to check and verify user will go here
         return userRepository.save(user);  // .save() is not initially defined in UserRepository. but it does not give error because
         // UserRepository extends JpaRepository. Spring data JPA automatically provides these fully functioning database commands
-        // JPA stands for Java Persistence API, it significantly reduced boiler plate code required for database interaction
+        // JPA stands for Java Persistence API, it significantly reduced boilerplate code required for database interaction
     }
 
     public List<User> getAllUsers() {
