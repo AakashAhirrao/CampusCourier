@@ -23,7 +23,7 @@ public class RequestService {
 
     public Request createRequest (Long userId, Request newRequest) {
 
-        User requester = userRepository.findAllById(userId)
+        User requester = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Error: User with ID: "+userId+" does not exist"));
         // this is part of what is called as Defensive programming. which uses wrapper called Optional
         // we told userRepository to find the user with ID, if it exists then good or .orElseThrow() methods acts
