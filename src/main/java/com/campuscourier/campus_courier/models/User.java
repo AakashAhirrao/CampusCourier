@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "users")
 public class User {
 
-    @Id
+    @Id // @Id annotations indicate that this column is primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

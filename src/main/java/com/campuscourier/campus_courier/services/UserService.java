@@ -16,8 +16,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     // This is called as dependency injection, where class is injected in field constructor and initialized
-    // Spring boot strongly forbids created a new object from class
-    // Dependency 
+    // Spring boot strongly forbids created a new object from class as we do with using new keyword such Product product = new Product
+    // @Autowired annotation tells When you start up, please find the UserRepository and hand it to me, so I can use it
     @Autowired
     public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
@@ -25,7 +25,10 @@ public class UserService {
 
     public User registerUser(User user){
         // logic checks and legality checks
-        return userRepository.save(user);
+        // the logic to check and verify user will go here
+        return userRepository.save(user);  // .save() is not initially defined in UserRepository. but it does not give error because
+        // UserRepository extends JpaRepository. Spring data JPA automatically provides these fully functioning database commands
+        // JPA stands for Java Persistence API, it significantly reduced boiler plate code required for database interaction
     }
 
     public List<User> getAllUsers() {
