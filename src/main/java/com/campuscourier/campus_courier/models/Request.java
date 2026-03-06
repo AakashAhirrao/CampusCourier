@@ -1,5 +1,7 @@
 package com.campuscourier.campus_courier.models;
 
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
@@ -25,6 +27,11 @@ public class Request {
 
     @Column(nullable = false, length = 20)
     private String status;
+
+    @CreationTimestamp // @CreationTimestamp is special hibernate tool which tells the spring boot packer to look at exact time of server
+    // and stamp it to the variable
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     public Long getId() {
         return id;
@@ -72,5 +79,9 @@ public class Request {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }
