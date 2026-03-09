@@ -42,7 +42,33 @@ public class RequestService {
         return requestRepository.save(newRequest);
     }
 
-    public List<Request> getAllRequests() {
-        return requestRepository.findAll();
+    public List<Request> getPendingRequests() {
+        return requestRepository.findByStatus("PENDING");
+    }
+
+    public Request acceptRequest(Long requestId, Long delivererId) {
+
+        // First step is to find the request
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Request with ID " + requestId + " not found"
+                ));
+
+        // Check: the request is actually pending
+        if (!request.getStatus().equals("PENDING")){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Sorry, the request is already taken"
+            );
+        }
+
+        User deliverer = userRepository.findById(delivererId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User not found"
+                ));
+
+        request.setStatus("ACCEPTED");
+        request.setDeliverer(deliverer);
+
+        return requestRepository.save(request);
     }
 }
