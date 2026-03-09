@@ -16,6 +16,10 @@ public class Request {
     @JoinColumn(name = "requester_id", nullable = false) // @JoinColumn indicate foreign key and name shows the name of column
     private User requester;
 
+    @ManyToOne
+    @JoinColumn(name = "deliverer_id")
+    private User deliverer;
+
     @Column(name = "item_name", nullable = false)
     private String itemName;
 
@@ -84,4 +88,8 @@ public class Request {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public User getDeliverer() { return deliverer; }
+
+    public void setDeliverer(User deliverer) { this.deliverer = deliverer; }
 }
