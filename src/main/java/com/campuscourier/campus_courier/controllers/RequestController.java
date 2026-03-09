@@ -34,4 +34,9 @@ public class RequestController {
     public Request acceptRequest(@PathVariable Long requestId, @PathVariable Long delivererId) {
         return requestService.acceptRequest(requestId, delivererId);
     }
+
+    @PutMapping("/{requestId}/complete/{delivererId}")
+    public Request completeRequest(@PathVariable Long requestId, @PathVariable Long delivererId){
+        return requestService.completeRequest(requestId, delivererId);
+    }
 }

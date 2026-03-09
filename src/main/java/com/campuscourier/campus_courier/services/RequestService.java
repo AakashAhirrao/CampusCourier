@@ -71,4 +71,28 @@ public class RequestService {
 
         return requestRepository.save(request);
     }
+
+    public Request completeRequest(Long requestId, Long delivererId) {
+
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Request with ID " + requestId + " not found"
+                ));
+
+        if (!request.getStatus().equals("ACCEPTED")){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "You can only complete request that are accepted"
+            );
+        }
+
+        if (!request.getDeliverer().getId().equals(delivererId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Security alert: only assigned deliverer can complete this request"
+            );
+        }
+
+        request.setStatus("COMPLETED");
+
+        return requestRepository.save(request);
+    }
 }
