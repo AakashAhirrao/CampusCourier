@@ -27,6 +27,11 @@ public class RequestController {
 
     @GetMapping("/feed")
     public List<Request> getFeed(){
-        return requestService.getAllRequests();
+        return requestService.getPendingRequests();
+    }
+
+    @PutMapping("{requestId}/accept/{delivererId}")
+    public Request acceptRequest(@PathVariable Long requestId, @PathVariable Long delivererId) {
+        return requestService.acceptRequest(requestId, delivererId);
     }
 }
