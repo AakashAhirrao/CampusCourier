@@ -1,11 +1,14 @@
 package com.campuscourier.campus_courier.services;
 
+import com.campuscourier.campus_courier.dto.LoginRequest;
 import com.campuscourier.campus_courier.models.User;
 import com.campuscourier.campus_courier.repositories.UserRepository;
 import com.campuscourier.campus_courier.security.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -45,5 +48,25 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public String loginUser(LoginRequest loginRequest){
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User with this email not found"
+                ));
+
+        // see if the bcrpyt password matches the given password
+        boolean isPasswordMatch = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
+
+        if (!isPasswordMatch){
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "Invalid password"
+            );
+        }
+
+        // login is successful if the checks are complete
+        // return JWT later rather than plaintext
+        return "Login Successful!, Welcome back, "+ user.getFirstName() + " !";
     }
 }
