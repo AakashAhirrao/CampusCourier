@@ -19,6 +19,9 @@ public class User {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
+    @Column(nullable = false)
+    private String password;
+
     @Column(name = "hostel_block", nullable = false, length = 20)
     private String hostelBlock;
 
@@ -71,5 +74,13 @@ public class User {
 
     public void setRoomNumber(String roomNumber) {
         this.roomNumber = roomNumber;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -2,7 +2,9 @@ package com.campuscourier.campus_courier.services;
 
 import com.campuscourier.campus_courier.models.User;
 import com.campuscourier.campus_courier.repositories.UserRepository;
+import com.campuscourier.campus_courier.security.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,18 +16,28 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // This is called as dependency injection, where class is injected in field constructor and initialized
     // Spring boot strongly forbids created a new object from class as we do with using new keyword such Product product = new Product
     // @Autowired annotation tells When you start up, please find the UserRepository and hand it to me, so I can use it
     @Autowired
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User registerUser(User user){
         // logic checks and legality checks
         // the logic to check and verify user will go here
+
+        String plainPassword = user.getPassword();
+
+        String hashPassword = passwordEncoder.encode(plainPassword);
+
+        user.setPassword(hashPassword);
+
+        // .save() saves the user object to database Postgres
         return userRepository.save(user);  // .save() is not initially defined in UserRepository. but it does not give error because
         // UserRepository extends JpaRepository. Spring data JPA automatically provides these fully functioning database commands
         // JPA stands for Java Persistence API, it significantly reduced boilerplate code required for database interaction

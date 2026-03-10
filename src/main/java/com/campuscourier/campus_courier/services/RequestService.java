@@ -6,9 +6,11 @@ import com.campuscourier.campus_courier.repositories.RequestRepository;
 import com.campuscourier.campus_courier.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -94,5 +96,19 @@ public class RequestService {
         request.setStatus("COMPLETED");
 
         return requestRepository.save(request);
+    }
+
+    @Scheduled(fixedRate = 60000)
+    public void expireOldRequests() {
+
+        LocalDateTime oneMinuteAge = LocalDateTime.now().minusMinutes(1);
+
+        List<Request> expiredRequests = requestRepository.findByStatusAndCreatedAtBefore("PENDING", oneMinuteAge);
+
+        for (Request req: expiredRequests){
+            req.setStatus("EXPIRED");
+            requestRepository.save(req);
+            System.out.println("Automated Cleanup: Requests ID " + req.getId() + " has expired");
+        }
     }
 }
