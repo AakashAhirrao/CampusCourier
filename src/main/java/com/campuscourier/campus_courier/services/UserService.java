@@ -3,6 +3,7 @@ package com.campuscourier.campus_courier.services;
 import com.campuscourier.campus_courier.dto.LoginRequest;
 import com.campuscourier.campus_courier.models.User;
 import com.campuscourier.campus_courier.repositories.UserRepository;
+import com.campuscourier.campus_courier.security.JwtUtil;
 import com.campuscourier.campus_courier.security.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,14 +21,16 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     // This is called as dependency injection, where class is injected in field constructor and initialized
     // Spring boot strongly forbids created a new object from class as we do with using new keyword such Product product = new Product
     // @Autowired annotation tells When you start up, please find the UserRepository and hand it to me, so I can use it
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public User registerUser(User user){
@@ -56,7 +59,7 @@ public class UserService {
                         HttpStatus.NOT_FOUND, "User with this email not found"
                 ));
 
-        // see if the bcrpyt password matches the given password
+        // see if the BCrypt password matches the given password
         boolean isPasswordMatch = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
 
         if (!isPasswordMatch){
@@ -67,6 +70,8 @@ public class UserService {
 
         // login is successful if the checks are complete
         // return JWT later rather than plaintext
-        return "Login Successful!, Welcome back, "+ user.getFirstName() + " !";
+
+        String token = jwtUtil.generateToken(user.getEmail());
+        return token;
     }
 }
