@@ -1,15 +1,43 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Login(){
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
 
-        console.log("Attempting to login with: ",email,password);
+        console.log("Sending data to Spring Boot...");
+
+        try{
+            const response = await fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    },
+                body: JSON.stringify({email: email, password: password}),
+            });
+
+            if (response.ok) {
+                const token = await response.text();
+
+                localStorage.setItem('jwt_token', token);
+
+                console.log("Success!, here is your JWT ID card :", token);
+
+                navigate('/feed');
+            }
+            else {
+                console.log("Login failed!, the bouncer rejected the credentials")
+            }
         }
+        catch (error){
+            console.error("Network connectione error: ", error);
+        }
+};
 
     return (
         <div style={{padding: '20px', maxWidth: '400px', margin: '0 auto'}}>
@@ -39,7 +67,7 @@ function Login(){
                 </button>
             </form>
         </div>
-        );
+    );
 }
 
 export default Login;
