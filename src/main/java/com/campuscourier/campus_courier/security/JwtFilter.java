@@ -38,6 +38,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             catch (Exception e){
                 System.out.println("Invalid or expired token");
+                e.printStackTrace();
             }
         }
 
