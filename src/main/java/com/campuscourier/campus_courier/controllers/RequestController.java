@@ -1,7 +1,11 @@
 package com.campuscourier.campus_courier.controllers;
 
 import com.campuscourier.campus_courier.models.Request;
+import com.campuscourier.campus_courier.models.User;
+import com.campuscourier.campus_courier.repositories.UserRepository;
 import com.campuscourier.campus_courier.services.RequestService;
+import com.campuscourier.campus_courier.services.UserService;
+import org.hibernate.boot.model.process.internal.UserTypeResolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +17,12 @@ import java.util.List;
 public class RequestController {
 
     private final RequestService requestService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public RequestController (RequestService requestService){
+    public RequestController (RequestService requestService, UserRepository userRepository){
         this.requestService = requestService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping
@@ -31,8 +37,12 @@ public class RequestController {
 
         // 3. For right now, just to prove the connection works,
         // let's temporarily hardcode the userId as 1 so your service doesn't break.
-        Long temporaryUserId = 7L;
-        return requestService.createRequest(temporaryUserId, newRequest);
+        User actualUser = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Error: Student not found"));
+
+        Long realUserId = actualUser.getId();
+
+        return requestService.createRequest(realUserId, newRequest);
     }
 
     @GetMapping("/feed")
