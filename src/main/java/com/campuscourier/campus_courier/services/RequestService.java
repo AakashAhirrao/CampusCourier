@@ -98,7 +98,7 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 180000)
     public void expireOldRequests() {
 
         LocalDateTime oneMinuteAge = LocalDateTime.now().minusMinutes(1);
