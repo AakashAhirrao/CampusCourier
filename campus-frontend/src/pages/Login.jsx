@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Login(){
 
@@ -66,6 +67,9 @@ function Login(){
                     Login
                 </button>
             </form>
+            <p style={{ marginTop: '20px', textAlign: 'center' }}>
+                    New to CampusCourier? <Link to="/register">Create an account</Link>
+                  </p>
         </div>
     );
 }
