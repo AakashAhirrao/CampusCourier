@@ -60,7 +60,7 @@ function Feed() {
     const token = localStorage.getItem('jwt_token');
 
     try {
-        const response = await fetch('http://localhost:8080/api/requests', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/requests`, {
             method: 'POST',
             headers: {
                 'Authorization' : 'Bearer ' + token,
