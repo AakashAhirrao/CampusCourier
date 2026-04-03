@@ -26,7 +26,7 @@ function Feed() {
 
       try {
         // Send the mail carrier to the Spring Boot bouncer
-        const response = await fetch('http://localhost:8080/api/requests/feed', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/requests/feed`, {
           method: 'GET',
           headers: {
             // Pin the ID card to the shirt! (Notice the space after 'Bearer ')
