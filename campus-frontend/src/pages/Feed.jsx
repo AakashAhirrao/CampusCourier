@@ -79,7 +79,17 @@ function Feed() {
             setItemDescription('');
             setTipAmount('');
 
-            window.location.reload(); // refresh the page to show new requests
+            const feedResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/requests/feed`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (feedResponse.ok) {
+                    const data = await feedResponse.json();
+                    setRequests(data);
+                }
         } else {
             console.log("Failed to create requests");
         }
