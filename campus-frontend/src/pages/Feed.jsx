@@ -79,6 +79,7 @@ function Feed() {
             setItemDescription('');
             setTipAmount('');
 
+            // test commit for bug in reload page
             const feedResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/requests/feed`, {
                     method: 'GET',
                     headers: {
